@@ -3,13 +3,16 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /", shorten)
-	mux.HandleFunc("GET /{id}", redirect)
+	r := chi.NewRouter()
 
-	err := http.ListenAndServe(":8080", mux)
+	r.Post("/", handleShorten)
+	r.Get("/{id}", handleRedirect)
+
+	err := http.ListenAndServe(":8080", r)
 	log.Fatal(err)
 }
