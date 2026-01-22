@@ -4,8 +4,6 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
-
-	"github.com/go-chi/chi/v5"
 )
 
 // TO DO: небезопасно для concurrent access
@@ -40,7 +38,7 @@ func handleShorten(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRedirect(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+	id := r.PathValue("id")
 	originalURL, ok := urlStore[id]
 
 	if !ok {
