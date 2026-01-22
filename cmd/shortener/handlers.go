@@ -6,11 +6,12 @@ import (
 	"net/http"
 )
 
+// TO DO: небезопасно для concurrent access
 var urlStore = make(map[string]string)
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-func generateId(length int) string {
+func generateID(length int) string {
 	b := make([]byte, length)
 
 	for i := range b {
@@ -28,12 +29,12 @@ func shorten(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shortId := generateId(8)
-	urlStore[shortId] = string(originalURL)
+	shortID := generateID(8)
+	urlStore[shortID] = string(originalURL)
 
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("http://localhost:8080/" + shortId))
+	w.Write([]byte("http://localhost:8080/" + shortID))
 }
 
 func redirect(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +42,7 @@ func redirect(w http.ResponseWriter, r *http.Request) {
 	originalURL, ok := urlStore[id]
 
 	if !ok {
-		http.Error(w, "not found", http.StatusBadRequest)
+		http.Error(w, "not found", http.StatusNotFound)
 		return
 	}
 

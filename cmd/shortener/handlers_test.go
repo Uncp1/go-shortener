@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_shorten(t *testing.T) {
+func TestShorten(t *testing.T) {
 	tests := []struct {
 		name             string
 		requestBody      string
@@ -38,6 +38,7 @@ func Test_shorten(t *testing.T) {
 			shorten(w, req)
 
 			result := w.Result()
+			defer result.Body.Close()
 			body, err := io.ReadAll(result.Body)
 
 			require.NoError(t, err)
@@ -50,7 +51,7 @@ func Test_shorten(t *testing.T) {
 	}
 }
 
-func Test_redirect(t *testing.T) {
+func TestRedirect(t *testing.T) {
 	urlStore["abc12345"] = "https://youtu.be/XHKm_dGFTzM?si=u-j5hqDr34FlUVsr"
 
 	tests := []struct {
@@ -68,7 +69,7 @@ func Test_redirect(t *testing.T) {
 		{
 			name:           "not found",
 			id:             "unknown",
-			expectedStatus: http.StatusBadRequest,
+			expectedStatus: http.StatusNotFound,
 		},
 	}
 	for _, tt := range tests {
@@ -80,6 +81,7 @@ func Test_redirect(t *testing.T) {
 			redirect(w, req)
 
 			result := w.Result()
+			defer result.Body.Close()
 
 			assert.Equal(t, tt.expectedStatus, result.StatusCode)
 
