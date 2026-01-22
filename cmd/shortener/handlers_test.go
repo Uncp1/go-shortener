@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestShorten(t *testing.T) {
+func TestHandleShorten(t *testing.T) {
 	tests := []struct {
 		name             string
 		requestBody      string
@@ -35,7 +35,7 @@ func TestShorten(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(tt.requestBody))
 			w := httptest.NewRecorder()
 
-			shorten(w, req)
+			handleShorten(w, req)
 
 			result := w.Result()
 			defer result.Body.Close()
@@ -51,7 +51,7 @@ func TestShorten(t *testing.T) {
 	}
 }
 
-func TestRedirect(t *testing.T) {
+func TestHandleRedirect(t *testing.T) {
 	urlStore["abc12345"] = "https://youtu.be/XHKm_dGFTzM?si=u-j5hqDr34FlUVsr"
 
 	tests := []struct {
@@ -78,7 +78,7 @@ func TestRedirect(t *testing.T) {
 			req.SetPathValue("id", tt.id)
 			w := httptest.NewRecorder()
 
-			redirect(w, req)
+			handleRedirect(w, req)
 
 			result := w.Result()
 			defer result.Body.Close()

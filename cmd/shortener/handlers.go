@@ -21,7 +21,7 @@ func generateID(length int) string {
 	return string(b)
 }
 
-func shorten(w http.ResponseWriter, r *http.Request) {
+func handleShorten(w http.ResponseWriter, r *http.Request) {
 	originalURL, err := io.ReadAll(r.Body)
 
 	if err != nil || len(originalURL) == 0 {
@@ -37,7 +37,7 @@ func shorten(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("http://localhost:8080/" + shortID))
 }
 
-func redirect(w http.ResponseWriter, r *http.Request) {
+func handleRedirect(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	originalURL, ok := urlStore[id]
 
